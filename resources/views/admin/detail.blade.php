@@ -1,4 +1,4 @@
-    @extends('layout.admin')
+    @extends('layout.sb-admin')
     @section('1', 'active')
     @section('content')
     <div class="col-12 col-md-7">
@@ -45,7 +45,7 @@
                 <li class="list-group-item">
                     <div class="row">
                         <div class="col-7">
-                            <b>{{$brg->jml_beli}}</b> {{$brg->nama }} 
+                            <b>{{$brg->jml_beli}}</b> {{$brg->nama }}
                         </div>
                         <div class="col-5 text-right">
                             {{ number_format($brg->jml_harga) }}

@@ -51,6 +51,8 @@ class AdminsController extends Controller
             'kode_barang' => $id,
             'nama' => $data->nama,
             'stok' => $data->stok,
+            'pack' => $data->pack,
+            'bungkus' => $data->bungkus,
             'berat' => $data->berat,
             'harga' => $data->harga,
             'gambar' => $fileName,
@@ -130,7 +132,7 @@ class AdminsController extends Controller
         }else{
             $akhirkode = 1;
         }
-    
+
         if ($akhirkode <= 9){
             $kodebaru = $simbol."000".$akhirkode;
         }else if($akhirkode <= 99){

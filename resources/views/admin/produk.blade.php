@@ -1,8 +1,9 @@
-@extends('layout.admin')
+@extends('layout.sb-admin')
 @section('2', 'active')
 @section('p-1', 'active')
 @section('title', 'Tambah Produk')
 @section('content')
+<div class="row">
     <div class="col-md-4 mb-3">
         <img src="{{ url('img/barang/default.jpg') }}" class="img-thumbnail d-block w-100">
     </div>
@@ -20,8 +21,18 @@
             </div>
             <div class="form-group row">
                 <label class="col-5 col-md-3 col-form-label" for="kode">Stok Barang</label>
-                <div class="input-group col-7 col-md-9">
-                    <input type="number" class="form-control" min="0" name="stok" placeholder="Stok barang.." id="kode">
+                <div class="col-md-9 col-7">
+                    <div class="row">
+                        <div class="input-group col-12 col-md-4 mb-3">
+                            <input type="number" class="form-control" min="0" name="stok" placeholder="Ball.." id="kode">
+                        </div>
+                        <div class="input-group col-12 col-md-4 mb-3">
+                            <input type="number" class="form-control" min="0" name="pack" placeholder="Pack.." id="kode">
+                        </div>
+                        <div class="input-group col-12 col-md-4">
+                            <input type="number" class="form-control" min="0" name="bungkus" placeholder="Bungkus.." id="kode">
+                        </div>
+                    </div>
                 </div>
                 @error('stok')
                     <span class="text-danger ml-2">Stok barang harus di isi.</span>
@@ -77,4 +88,5 @@
             </div>
         </form>
     </div>
+</div>
 @endsection

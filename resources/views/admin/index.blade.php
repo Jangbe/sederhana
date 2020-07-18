@@ -1,4 +1,4 @@
-@extends('layout.admin')
+@extends('layout.sb-admin')
 @section('1', 'active')
 @section('content')
 <div class="col-md-8 col-12">

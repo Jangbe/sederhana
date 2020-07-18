@@ -1,6 +1,6 @@
-@extends('layout.admin')
+@extends('layout.sb-admin')
 @section('title', 'Edit Produk')
-@section('5', 'active')
+@section('3', 'active')
 @section('p-2', 'active')
 @section('content')
 <div class="col-12">
