@@ -13,7 +13,7 @@ class CreateOngkirTable extends Migration
      */
     public function up()
     {
-        Schema::create('ongkir', function (Blueprint $table) {
+        Schema::create('ongkirs', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('kec');
             $table->string('desa');
@@ -30,6 +30,6 @@ class CreateOngkirTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ongkir');
+        Schema::dropIfExists('ongkirs');
     }
 }
