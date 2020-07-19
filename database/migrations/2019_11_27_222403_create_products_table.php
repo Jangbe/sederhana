@@ -14,9 +14,11 @@ class CreateProductsTable extends Migration
     public function up()
     {
         Schema::create('products', function (Blueprint $table) {
-            $table->string('kode_barang', 45);
+            $table->string('kode_barang', 45)->primary();
             $table->string('nama');
             $table->string('stok');
+            $table->string('pack');
+            $table->string('bungkus');
             $table->double('berat');
             $table->string('harga');
             $table->string('gambar');
