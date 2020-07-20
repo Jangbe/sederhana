@@ -30,7 +30,7 @@ class AdminsController extends Controller
         $data = [];
         $data['data'] = Buyer::join('transaksi', 'buyers.kode_pembeli', 'transaksi.kode_pembeli')->where('buyers.kode_pembeli', $id)->first();
         $data['pesan'] = DB::table('pesan')->get();
-        $data['barang'] = Buyer::join('carts', 'buyers.kode_pembeli', 'carts.kode_pembeli')->join('products', 'carts.kode_brg', 'products.kode_barang')->where('buyers.kode_pembeli', $id)->get();
+        $data['barang'] = Buyer::join('carts', 'buyers.kode_pembeli', 'carts.kode_pembeli')->join('products', 'carts.kode_brg', 'products.id')->where('buyers.kode_pembeli', $id)->get();
         return view('admin.detail', $data);
     }
 
@@ -42,13 +42,13 @@ class AdminsController extends Controller
             'harga'  => 'required',
             'gambar' => 'required|image|mimes:jpg,png,jpeg'
         ]);
-        $id = $this->kodeUnik('kode_barang', 'KD');
+        $id = $this->kodeUnik('id', 'KD');
         $file = $data->file('gambar');
         $eks = $file->getClientOriginalExtension();
         $fileName = date('dmy-').uniqid().'.'.$eks;
         $path = 'img/barang';
         Product::create([
-            'kode_barang' => $id,
+            'id' => $id,
             'nama' => $data->nama,
             'stok' => $data->stok,
             'pack' => $data->pack,
@@ -73,7 +73,7 @@ class AdminsController extends Controller
 
     public function edit1($id)
     {
-        $data = Product::where('kode_barang', $id)->first();
+        $data = Product::where('id', $id)->first();
         return view('admin.edit1', compact('data'));
     }
 
@@ -87,7 +87,7 @@ class AdminsController extends Controller
             'gambar' => 'image|mimes:jpg,png,jpeg'
         ]);
         $gambar = $request->file('gambar');
-        $namaLama = Product::where('kode_barang', $request->kode_barang)->first();
+        $namaLama = Product::where('id', $request->kode_barang)->first();
         $namaLama = $namaLama->gambar;
         if($gambar){
             $eks = $gambar->getClientOriginalExtension();
@@ -97,7 +97,7 @@ class AdminsController extends Controller
         }else{
             $fileName = $namaLama;
         }
-        Product::where('kode_barang', $request->kode_barang)->update([
+        Product::where('id', $request->kode_barang)->update([
             'nama' => $request->nama,
             'stok' => $request->stok,
             'berat' => $request->berat,
@@ -112,7 +112,7 @@ class AdminsController extends Controller
 
     public function destroy($id)
     {
-        Product::where('kode_barang', $id)->delete();
+        Product::where('id', $id)->delete();
         return redirect('/produk/edit')->with('pesan', [
             'pesan' => 'Barang berhasil di hapus',
             'type' => 'success'
