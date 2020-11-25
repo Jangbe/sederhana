@@ -209,6 +209,7 @@ class AdminsController extends Controller
 
     public function kodeUnik($col, $simbol){
         $data = Product::orderby($col, 'desc')->first();
+        dd($data);
         if($data){
             $akhirkode = substr($data->$col,-4)+1;
         }else{
