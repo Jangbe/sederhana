@@ -16,11 +16,11 @@ class CreateTransaksiTable extends Migration
         Schema::create('transaksi', function (Blueprint $table) {
             $table->bigInteger('id');
             $table->string('kode_pembeli', 8);
-            $table->string('kode_cart', 11);
             $table->bigInteger('ongkir');
             $table->bigInteger('total_harga');
-            $table->bigInteger('total_bayar');
             $table->integer('kode_pesan');
+            $table->integer('metode');
+            $table->string('bukti', 255)->nullable();
             $table->timestamps();
         });
     }

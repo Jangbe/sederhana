@@ -7,39 +7,38 @@ use Illuminate\Support\Facades\DB;
 use App\Product;
 use App\Buyer;
 use App\Cart;
-use Auth;
+use App\Transaksi;
 
 class CartsController extends Controller
 {
-    public function keranjang(Request $data)
+    public function keranjang()
     {
-        $produk = Product::where('kode_barang', $data->id)->first();
-        if($data->jumlah == 0){
-            return redirect('/belanja')->with('pesan', [
-                'pesan' => 'Barang gagal dimasukan ke keranjang, jumlah tidak boleh 0',
-                'type' => 'danger'
-            ]);
+        $data = Cart::getCart();
+        $data['barang'] = Product::all();
+        $data['carts'] = Cart::cart();
+        $data['menu'] = Cart::menu();
+        $data['ongkir'] = Cart::_ongkir();
+        $data['active'] = '';
+        $data['tersedia'] = $data['carts'] ? true : false;
+        if(auth()->user()){
+            $data['nama'] = auth()->user()->name;
+            $data['email'] = auth()->user()->email;
+            $data['telepon'] = auth()->user()->telepon;
+            $data['readonly'] = 'readonly';
         }else{
-            if($data->jumlah <= $produk->stok){
-                session(['item_'.$data->id => $data->jumlah]);
-                return redirect('/belanja')->with('pesan', [
-                    'pesan' => 'Barang telah dimasukan ke keranjang',
-                    'type' => 'success'
-                ]);
-            }else{
-                return redirect('/belanja')->with('pesan', [
-                    'pesan' => 'Barang gagal dimasukan ke keranjang, jumlah beli melebihi stok!',
-                    'type' => 'danger'
-                ]);
-            }
+            $data['nama'] = old('nama');
+            $data['email'] = old('email');
+            $data['telepon'] = old('notel');
+            $data['readonly'] = '';
         }
+        return view('belanja.keranjang', $data);
     }
 
     public function destroy($id)
     {
         $item = 'item_'.$id;
         session()->forget($item);
-        return redirect('/belanja')->with('pesan', [
+        return back(302)->with('pesan', [
             'pesan' => 'Barang telah dihapus dari keranjang',
             'type' => 'success'
         ]);
@@ -47,66 +46,90 @@ class CartsController extends Controller
 
     public function store(Request $request)
     {
-        $data = [];
-        foreach(session()->all() as $key => $value){
-            if(substr($key, 0, 5) == 'item_'){
-                $item = substr($key, 5, (strlen($key) -5));
-                $data[] = [
-                    'barang' => Product::where('kode_barang', $item)->first(),
-                    'jumlah' => $value
-                ];
-            }
+        $message = [
+            'required' => 'Field :attribute tidak boleh kosong',
+            'numeric' => 'Field ini harus dengan angka',
+            'max' => 'Field :attribute tidak boleh lebih dari :max huruf',
+            'email' => 'Harus memakai email yang benar',
+            'unique' => 'Field :attribute harus uniq, ini sudah dipakai oleh orang lain'
+        ];
+        if(!$request->admin){
+            $this->validate($request, [
+                'email' => 'required|unique:buyers|email',
+                'nama' => 'required|max:20',
+                'notel' => 'numeric|required',
+                'alamat' => 'required'
+            ], $message);
+            $email = $request->email;
+            $notel = $request->notel;
+            $alamat = $request->alamat;
+            $catatan = $request->catatan;
+            $metode = $request->metode;
+            //code untuk mengirim nomer transaksi ke alamat e-mail buyer
+        }else{
+            $email = '';
+            $notel = '';
+            $alamat = '';
+            $catatan = '';
+            $metode = 4;
         }
-        $alamat = $request->kecamatan.'-'.$request->desa;
         $kode_pembeli = $this->_kodeUnik('buyers', 'kode_pembeli', 'PM');
-        
+
         Buyer::create([
             'kode_pembeli' => $kode_pembeli,
             'nama' => $request->nama,
-            'email' => $request->email,
-            'telepon' => $request->notel,
+            'email' => $email,
+            'telepon' => $notel,
             'alamat' => $alamat,
-            'catatan' => $request->catatan
-        ]);
+            'catatan' => $catatan
+            ]);
+
+        $data = Cart::cart();
+        $harga = 0;
         foreach($data as $dat){
-            $stok = $dat['barang']->stok;
-            $stok = $stok - $dat['jumlah'];
-            Product::where('kode_barang', $dat['barang']->kode_barang)->update(['stok' => $stok]);
+            if($metode == 4){
+                $stok = $dat['data']->stok;
+                $stok -= $dat['jumlah'];
+                Product::where('kode_barang', $dat['data']->kode_barang)->update(['stok' => $stok]);
+            }
             $kode_cart = $this->_kodeUnik('carts', 'kode_cart', 'KP');
+            $jml_harga = $dat['jumlah'] * $dat['data']->harga;
             Cart::create([
                 'kode_cart' => $kode_cart,
                 'kode_pembeli' => $kode_pembeli,
-                'kode_brg' => $dat['barang']->kode_barang,
+                'kode_brg' => $dat['data']->kode_barang,
                 'tgl_beli' => time(),
-                'total_berat' => $dat['jumlah'] * $dat['barang']->berat,
+                'total_berat' => $dat['jumlah'] * $dat['data']->berat,
                 'jml_beli' => $dat['jumlah'],
-                'jml_harga' => $dat['jumlah'] * $dat['barang']->harga
+                'jml_harga' => $jml_harga
             ]);
-            session()->forget('item_'.$dat['barang']->kode_barang);
+            $harga += $jml_harga;
+            session()->forget('item_'.$dat['data']->kode_barang);
         }
-        $ongkir = DB::table('ongkirs')->where(['kec' => $request->kecamatan, 'desa' => $request->desa])->first();
-        if($request->metode == 4){
-            $ongkir = 0;
-        }else{
-            $ongkir = $ongkir->harga;
-            $ongkir = $ongkir * $request->berat;
-        }
-        $id_transaksi = date('Ymd');
-        $id_transaksi = $this->_kodeUnik('transaksi', 'id', $id_transaksi);
-        DB::table('transaksi')->insert([
+        // $ongkir = DB::table('ongkirs')->where(['kec' => $request->kecamatan, 'desa' => $request->desa])->first();
+        // if($request->metode == 4){
+        //     $ongkir = 0;
+        // }else{
+        //     $ongkir = $ongkir->harga;
+        //     $ongkir = $ongkir * $request->berat;
+        // }
+        $id_transaksi = $this->_kodeUnik('transaksi', 'id', date('Ymd'));
+        $pesan = $metode == 4? 2 : 1;
+        Transaksi::create([
             'id' => $id_transaksi,
             'kode_pembeli' => $kode_pembeli,
-            'ongkir' => $ongkir,
-            'total_harga' => $request->harga,
-            'total_bayar' => 0,
-            'kode_pesan' => 1
+            'ongkir' => 0,
+            'total_harga' => $harga,
+            'kode_pesan' => $pesan,
+            'metode' => $metode
         ]);
+
         return redirect('/belanja')->with('pesan', [
-            'pesan' => 'Barang-barang sudah dimasukan ke keranjang, silahkan bayar pesanan anda dengan nomer transaksi '.$id_transaksi,
+            'pesan' => 'Barang-barang sudah dimasukan ke keranjang, silahkan bayar pesanan anda dengan nomer transaksi '.$id_transaksi.', Nomer transaksi juga sudah dikirim ke alamat e-mail kamu',
             'type' => 'success'
         ]);
     }
-    
+
     public function _kodeUnik($table, $col, $simbol){
         $data = DB::table($table)->orderby($col, 'desc')->first();
         if($data){
@@ -114,7 +137,7 @@ class CartsController extends Controller
         }else{
             $akhirkode = 1;
         }
-    
+
         if ($akhirkode <= 9){
             $kodebaru = $simbol."000".$akhirkode;
         }else if($akhirkode <= 99){

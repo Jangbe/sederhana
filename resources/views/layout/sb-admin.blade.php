@@ -39,11 +39,24 @@
       <!-- Divider -->
       <hr class="sidebar-divider my-0">
 
+
+      <!-- Heading -->
+      <div class="sidebar-heading">
+        Dashboard
+      </div>
+
       <!-- Nav Item - Dashboard -->
       <li class="nav-item @yield('1')">
         <a class="nav-link" href="{{ url('/admin')}}">
-          <i class="fas fa-fw fa-tachometer-alt"></i>
-          <span>Dashboard</span></a>
+          <i class="fas fa-fw fa-inbox"></i>
+          <span>Pesanan</span></a>
+      </li>
+
+      <!-- Nav Item - Dashboard -->
+      <li class="nav-item @yield('1-3')">
+        <a class="nav-link" href="{{ url('/admin/struct')}}">
+          <i class="fas fa-sticky-note"></i>
+          <span>Buat Struk</span></a>
       </li>
 
       <!-- Divider -->
@@ -53,6 +66,13 @@
       <div class="sidebar-heading">
         Produk
       </div>
+
+      <!-- Nav Item - Dashboard -->
+      <li class="nav-item @yield('1-2')">
+        <a class="nav-link" href="{{ url('/admin/category')}}">
+          <i class="fas fa-fw fa-tags"></i>
+          <span>Kategori</span></a>
+      </li>
 
       <!-- Nav Item - Charts -->
       <li class="nav-item @yield('2')">
@@ -66,6 +86,13 @@
         <a class="nav-link" href="{{ url('/produk/edit')}}">
           <i class="fas fa-fw fa-edit"></i>
           <span>Edit Barang</span></a>
+      </li>
+
+      <!-- Nav Item - Charts -->
+      <li class="nav-item @yield('3-4')">
+        <a class="nav-link" href="{{ url('/produk/tmbh-stok')}}">
+          <i class="fas fa-fw fa-plus-circle"></i>
+          <span>Tambah Stok Barang</span></a>
       </li>
 
       <!-- Divider -->
@@ -290,7 +317,16 @@
         <!-- Begin Page Content -->
         <div class="container-fluid">
 
-            @yield('content')
+            <div class="row">
+                @if(session('pesan'))
+                    <div class="col-12">
+                        <div class="alert alert-{{session('pesan')['type']}} text-center">
+                            {{session('pesan')['pesan']}}
+                        </div>
+                    </div>
+                @endif
+                @yield('content')
+            </div>
 
         </div>
         <!-- /.container-fluid -->
@@ -351,7 +387,15 @@
       if(window.innerWidth <= 800){
           $('.navbar-nav').addClass('toggled');
       }
+      setTimeout(function(){
+            $('.alert').fadeOut();
+      }, 3000);
+      $('.custom-file-input').change(function(){
+            let nama = $(this).val().split('\\').pop();
+            $(this).next('.custom-file-label').addClass("selected").html(nama);
+      });
   </script>
+  @yield('script')
 
 </body>
 

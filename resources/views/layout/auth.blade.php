@@ -4,7 +4,7 @@
 	<title>Sederhana | @yield('title')</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-<!--===============================================================================================-->	
+<!--===============================================================================================-->
 	<link rel="icon" type="image/png" href="{{ url('images/icons/favicon.ico"') }}"/>
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="{{ url('vendor/bootstrap/css/bootstrap.min.css') }}">
@@ -14,7 +14,7 @@
 	<link rel="stylesheet" type="text/css" href="{{ url('fonts/Linearicons-Free-v1.0.0/icon-font.min.css') }}">
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="{{ url('vendor/animate/animate.css') }}">
-<!--===============================================================================================-->	
+<!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="{{ url('vendor/css-hamburgers/hamburgers.min.css') }}">
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="{{ url('vendor/select2/select2.min.css') }}">
@@ -24,7 +24,7 @@
 <!--===============================================================================================-->
 </head>
 <body>
-	
+
 	<div class="limiter">
 		<div class="container-login100">
 			<div class="wrap-login100 p-l-50 p-r-50 p-t-30 p-b-30">
@@ -39,11 +39,11 @@
 			</div>
 		</div>
 	</div>
-	
-	
 
-	
-<!--===============================================================================================-->	
+
+
+
+<!--===============================================================================================-->
 	<script src="{{ url('vendor/jquery/jquery-3.2.1.min.js') }}"></script>
 <!--===============================================================================================-->
 	<script src="{{ url('vendor/bootstrap/js/popper.js') }}"></script>

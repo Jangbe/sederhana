@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="{{ url('css/app.css')}}">
     <link rel="stylesheet" href="{{ url('css/bootstrap.css')}}">
     <link rel="stylesheet" href="{{ url('font/css/all.css')}}">
@@ -19,13 +20,18 @@
         }.allura{
             font-family: "Allura";
         }.allura span{
-            color: lightblue;
+            color: rgb(156, 221, 252);
             text-shadow: 4px 0 0 royalblue;
         }.allura p{
-            color: blue;
+            color: black;
             font-family: fantasy;
+            text-shadow: 0px 0 0  black;
         }
-        
+        /* body{
+            background-image: url('images/wp2.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
+        } */
     </style>
 </head>
 <body>
@@ -38,7 +44,7 @@
                 @csrf
                 <div class="form-group">
                     <div class="input-group" style="font-family:Verdana, Geneva, Tahoma, sans-serif;">
-                        <input autocomplete="off" type="text" class="form-control" name="cari" placeholder="Cari barang disini....">
+                        <input autocomplete="off" type="text" class="form-control bg-transparent text-primary" name="cari" placeholder="Cari barang disini....">
                         <div class="input-group-append">
                             <button class="btn btn-info" type="submit">Cari</button>
                         </div>
@@ -162,34 +168,17 @@
 //         }
 //     });
 // }
+        $.ajax({
+            header: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
         setTimeout(function(){
             $('.alert').fadeOut();
         }, 3000);
         $('.custom-file-input').change(function(){
             let nama = $(this).val().split('\\').pop();
             $(this).next('.custom-file-label').addClass("selected").html(nama);
-        });
-        $('.custom-select').change(function(){
-            let jumlah = $(this).val();
-            let harga = $(this).data('harga');
-            let total = harga * jumlah;
-            if(jumlah > 0){
-                $('#jumlah-rp').html("Rp. "+number_format(total));
-            }
-        });
-        $('#jml').keyup(function(){
-            let jumlah = $(this).val();
-            let stok = $(this).data('stok');
-            let harga = $(this).data('harga');
-            let total;
-            if(jumlah > 0){
-                if(jumlah <= stok){
-                    total = harga * jumlah;
-                }else{
-                    total = 0;
-                }
-            }
-            $('#jumlah-rp').html("Rp. "+number_format(total));
         });
     </script>
     @yield('script')

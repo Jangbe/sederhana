@@ -3,38 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Product;
+use App\Cart;
+use App\Kategori;
 use Illuminate\Http\Request;
-use App\Ongkir;
 
 class ProductsController extends Controller
 {
-    public function _cart()
-    {
-        $data = [];
-        foreach(session()->all() as $key => $value){
-            if(substr($key, 0, 5) == 'item_'){
-                $item = substr($key, 5, (strlen($key) -5));
-                $data[] = [
-                    'data' =>Product::where('kode_barang', $item)->first(),
-                    'jumlah' => $value
-                ];
-            }
-        }
-        return $data;
-    }
-
     public function index($kategori = '')
     {
         $data = [];
+        $data = Cart::getCart();
+        $data['carts'] = Cart::cart();
         if($kategori){
             $data['barang'] = Product::where('kategori', $kategori)->get();
         }else{
             $data['barang'] = Product::all();
         }
-        $data['carts'] = $this->_cart();
-        $data['menu'] = $this->_menu();
-        $data['ongkir'] = $this->_ongkir();
+        $data['menu'] = Cart::menu();
+        $data['ongkir'] = Cart::_ongkir();
         $data['active'] = $kategori;
+        // dd($data);
         return view('belanja.index', $data);
     }
 
@@ -42,76 +30,55 @@ class ProductsController extends Controller
     {
         $data = [];
         $data['barang'] = Product::where('nama', 'like', "%$cari->cari%")->get();
-        $data['menu'] = $this->_menu();
-        $data['carts'] = $this->_cart();
-        $data['ongkir'] = $this->_ongkir();
+        $data['menu'] = Cart::menu();
+        $data['carts'] = Cart::cart();
+        $data['ongkir'] = Cart::_ongkir();
         $data['active'] = '';
         return view('belanja.index', $data);
     }
 
-    
+
     public function show($detail)
     {
-        $data = [];
-        $data['data'] = Product::where('kode_barang', $detail)->get();
-        $data['menu'] = $this->_menu();
-        $data['carts'] = $this->_cart();
-        $data['ongkir'] = $this->_ongkir();
-        $data['active'] = $data['data'][0]->kategori;
-        return view('belanja.detail', $data);
-    }
-
-    public function _menu()
-    {
-        return [
-            'link' => ['','Roko', 'Sabun', 'Makanan'],
-            'menu' => ['Semua', 'Roko', 'Sabun', 'Makanan']
-        ];
-    }
-
-    public function _ongkir()
-    {
-        $kec = [];
-        $ongkir = Ongkir::orderby('kec', 'asc')->get();
-        $jml = count($ongkir);
-        for($i = 0; $i < $jml; $i++){
-            if($i != $jml-1){
-                if($ongkir[$i]->kec != $ongkir[$i+1]->kec){
-                    $kec[] = $ongkir[$i]->kec;
-                }
-            }
-        }
-        return $kec;
-    }
-
-    public function ongkir(Request $data)
-    {
-        $kec = $data->kec;
-        $desa = $data->desa;
-        if($desa == ''){
-            $ongkir = Ongkir::where('kec', $kec)->orderby('desa', 'asc')->get();
+        $data = Product::getStok($detail);
+        $data = Cart::getCart($data);
+        $data['data'] = Product::where(['products.kode_barang' => $detail])->first();
+        if($data['data']){
+            $data['menu'] = Cart::menu();
+            $data['carts'] = Cart::cart();
+            $data['ongkir'] = Cart::_ongkir();
+            $data['active'] = $data['data']->kategori;
+            $data['nama_kategori'] = Kategori::where('slug', $data['active'])->first()->nama_kategori;
+            return view('belanja.detail', $data);
         }else{
-            $ongkir = Ongkir::where(['kec' => $kec, 'desa' => $desa])->first();
+            return abort(404);
         }
-        return $ongkir;
     }
 
-    public function keranjang()
+    public function keranjang(Request $data)
     {
-        $data = [];
-        $data['barang'] = Product::all();
-        $data['carts'] = $this->_cart();
-        $data['menu'] = $this->_menu();
-        $data['ongkir'] = $this->_ongkir();
-        $data['active'] = '';
-        foreach(session()->all() as $key => $value){
-            if(substr($key, 0, 5) == 'item_'){
-                $data['tersedia'] = true;
+        $produk = Product::where('kode_barang', $data->kode_barang)->first();
+        $jumlah = Product::convertStok($data);
+        $jumlah = $jumlah['hasil'];
+        if($jumlah == 0){
+            return back(302)->with('pesan', [
+                'pesan' => 'Barang gagal dimasukan ke keranjang, jumlah tidak boleh 0',
+                'type' => 'danger'
+            ]);
+        }else{
+            if($jumlah <= $produk->stok){
+                session(['item_'.$data->kode_barang => $jumlah]);
+                return back(302)->with('pesan', [
+                    'pesan' => 'Barang telah dimasukan ke keranjang',
+                    'type' => 'success'
+                ]);
             }else{
-                $data['tersedia'] = false;
+                return back(302)->with('pesan', [
+                    'pesan' => 'Barang gagal dimasukan ke keranjang, jumlah beli melebihi stok!',
+                    'type' => 'danger'
+                ]);
             }
         }
-        return view('belanja.keranjang', $data);
     }
 
 }

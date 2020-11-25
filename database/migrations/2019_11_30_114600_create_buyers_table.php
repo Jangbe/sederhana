@@ -16,9 +16,10 @@ class CreateBuyersTable extends Migration
         Schema::create('buyers', function (Blueprint $table) {
             $table->string('kode_pembeli', 8)->primary();
             $table->string('nama');
-            $table->string('email')->unique();
-            $table->string('telepon', 13);
-            $table->string('alamat');
+            $table->string('email')->nullable();
+            $table->string('telepon', 13)->nullable();
+            $table->string('alamat')->nullable();
+            $table->string('catatan')->nullable();
             $table->timestamps();
         });
     }

@@ -1,5 +1,5 @@
 @extends('layout.main')
-@section('script')
+@section('script1')
 <script>
     $('#form-buyer').hide();
     $('#btn-kirim').hide();
@@ -81,7 +81,7 @@
                     </button>
                 </div>
                 <div class="collapse show" id="kategori1">
-                    @for($m = 0; $m <= 3; $m++)
+                    @for($m = 0; $m < count($menu['menu']); $m++)
                     @if($menu['link'][$m] == $active)
                     <a href="{{ url('/belanja').'/'.$menu['link'][$m] }}" class="list-group-item list-group-item-action bg-secondary text-white">&raquo; {{$menu['menu'][$m]}}</a>
                     @else
@@ -93,11 +93,6 @@
         </div>
         <div class="col-12">
             <ul class="list-group mt-3 keranjang">
-                @php
-                    $total_harga = 0;
-                    $jumlah_item = 0;
-                    $jumlah_berat = 0;
-                @endphp
                 <li class="list-group-item bg-info text-white text-center h5">
                     <i class="fas fa-cart-plus"></i> Keranjangku
                     <button type="button" class="close" data-target="#keranjang1" data-toggle="collapse">
@@ -106,28 +101,16 @@
                 </li>
                 <div class="collapse show" id="keranjang1">
                     @if($carts)
-                    @foreach($carts as $cart)
-                    @php
-                    $kode = $cart['data']->kode_barang;
-                    $nama = $cart['data']->nama;
-                    $jumlah = $cart['jumlah'];
-                    $harga = $cart['data']->harga;
-                    $total = number_format($jumlah * $harga);
-                    $berat = $jumlah * $cart['data']->berat;
-                    $total_harga += $jumlah * $harga;
-                    $harga = number_format($harga);
-                    $jumlah_item += $jumlah;
-                    $jumlah_berat += $berat;
-                    @endphp
+                    @foreach($detail as $cart)
                     <li class="list-group-item">
-                        {{ $jumlah }} <b>{{ $nama}}</b> {{ ' ('.$jumlah.' x '.$harga.") "}}
+                        {{ $cart['jumlah'] }} <b>{{ $cart['nama']}}</b> {{ ' ('.$cart['jumlah'].' x '.$cart['harga'].") "}}
                         <button type="button" class="close">
-                            <a href="{{ url('keranjang/hapus').'/'.$cart['data']->kode_barang }}"><i class="fas fa-trash text-danger"></i></a>
+                            <a href="{{ url('keranjang/hapus').'/'.$cart['kode'] }}"><i class="fas fa-trash text-danger"></i></a>
                         </button> <br>
-                        {{"=> Rp. ".$total.' ['.$berat.' Kg ]' }}
+                        {{"=> Rp. ".$cart['total'].' ['.$cart['berat'].' Kg ]' }}
                     </li>
-                @endforeach
-                @else
+                    @endforeach
+                    @else
                     <li class="list-group-item text-center text-danger">
                         Keranjang belanja masih kosong
                     </li>
@@ -168,7 +151,7 @@
         </div>
     </div>
     <ul class="nav nav-tabs d-md-none justify-content-center mb-3">
-        @for($m = 0; $m <= 3; $m++)
+        @for($m = 0; $m < count($menu['menu']); $m++)
             @if($menu['link'][$m] == $active)
                 <li class="nav-item">
                     <a class="nav-link active" href="{{ url('/belanja').'/'.$menu['link'][$m]}}">{{$menu['menu'][$m]}}</a>
@@ -186,5 +169,6 @@
         @yield('result')
     </div>
 </div>
-@csrf
 @endsection
+
+

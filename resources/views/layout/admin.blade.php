@@ -55,6 +55,7 @@
                         <div class="dropdown-menu">
                             <a class="dropdown-item @yield('p-1')" href="{{ url('/produk/add')}}">Tambah Produk</a>
                             <a class="dropdown-item @yield('p-2')" href="{{ url('/produk/edit')}}">Edit Produk</a>
+                            <a class="dropdown-item @yield('p-3')" href="{{ url('/produk/tmb_stok')}}">Tambah Stok Produk</a>
                         </div>
                     </li>
                     <li class="nav-item">

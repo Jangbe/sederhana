@@ -15,6 +15,7 @@ class CreateCartsTable extends Migration
     {
         Schema::create('carts', function (Blueprint $table) {
             $table->string('kode_cart')->primary();
+            $table->string('kode_pembeli');
             $table->string('kode_brg');
             $table->string('tgl_beli');
             $table->float('total_berat');

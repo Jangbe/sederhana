@@ -15,9 +15,11 @@ class Role
      */
     public function handle($request, Closure $next, $role)
     {
-        if(auth()->user()->role == $role){
-            return $next($request);
+        if(auth()->user()){
+            if(auth()->user()->role == $role){
+                return $next($request);
+            }
         }
-        return redirect('/');
+        return abort(403);
     }
 }
