@@ -98,7 +98,7 @@ class AdminsController extends Controller
             'harga'  => 'required',
             'gambar' => 'required|image|mimes:jpg,png,jpeg'
         ]);
-        $id = $this->kodeUnik('kode_barang', 'KD');
+        $id = $this->kodeUnik('id', 'KD');
         $file = $data->file('gambar');
         $eks = $file->getClientOriginalExtension();
         $fileName = date('dmy-').uniqid().'.'.$eks;
