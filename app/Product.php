@@ -3,11 +3,14 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use PhpParser\Node\Expr\New_;
 
 class Product extends Model
 {
     protected $guarded = ['created_at', 'updated_at'];
+    public function getRouteKeyName()
+    {
+        return 'kode_barang';
+    }
 
     //View stok barang
     public static function getStok($kode){
