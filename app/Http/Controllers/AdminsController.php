@@ -98,7 +98,7 @@ class AdminsController extends Controller
             'harga'  => 'required',
             'gambar' => 'required|image|mimes:jpg,png,jpeg'
         ]);
-        $id = $this->kodeUnik('id', 'KD');
+        $id = $this->kodeUnik('kode_barang', 'KD');
         $file = $data->file('gambar');
         $eks = $file->getClientOriginalExtension();
         $fileName = date('dmy-').uniqid().'.'.$eks;
@@ -106,7 +106,7 @@ class AdminsController extends Controller
         $detail = $data->detail;
         $detail[] = 1;
         Product::create([
-            'id' => $id,
+            'kode_barang' => $id,
             'nama' => $data->nama,
             'singkatan' => $data->singkatan,
             'stok' => 0,
