@@ -106,7 +106,7 @@ class AdminsController extends Controller
         $detail = $data->detail;
         $detail[] = 1;
         Product::create([
-            'kode_barang' => $id,
+            'id' => $id,
             'nama' => $data->nama,
             'singkatan' => $data->singkatan,
             'stok' => 0,
