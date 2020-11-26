@@ -214,7 +214,6 @@ class AdminsController extends Controller
         }else{
             $akhirkode = 1;
         }
-        dd($akhirkode);
         
         if ($akhirkode <= 9){
             $kodebaru = $simbol."000".$akhirkode;
