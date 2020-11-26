@@ -7,10 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     protected $guarded = ['created_at', 'updated_at'];
-    public function getRouteKeyName()
-    {
-        return 'kode_barang';
-    }
+    protected $primaryKey = null;
+    public $incrementing = false;
 
     //View stok barang
     public static function getStok($kode){

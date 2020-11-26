@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 class Cart extends Model
 {
     protected $guarded = ['created_at', 'updated_at'];
+    protected $primaryKey = null;
+    public $incrementing = false;
 
     public static function cart()
     {

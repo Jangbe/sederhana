@@ -9,6 +9,8 @@ use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 class Buyer extends Model
 {
     protected $guarded = ['created_at', 'updated_at'];
+    protected $primaryKey = null;
+    public $incrementing = false;
 
     public static function setTextStruk($data){
         $connector = new WindowsPrintConnector('Printer Kasir');
