@@ -28,7 +28,7 @@
     {{$products->links()}}
     </div>
     @csrf
-    <div class="col-4">
+    <div class="col-12 col-md-4">
         <form action="{{ url('keranjang/add') }}" method="post">
             @csrf
             <input type="hidden" name="admin" value="true">
