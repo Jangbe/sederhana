@@ -19,7 +19,7 @@
                 <span class="d-sm-inline-block d-md-none">{{$product->singkatan}}</span>
                 <button class="btn btn-success float-right ml-2" type="submit"><i class="fas fa-plus"></i></button>
                 @for ($i = count(explode('-', $product->detail))-1; $i >= 0; $i--)
-                <input type="number" name="detail[{{$i}}]" class="form-control col-md-2 col-2 d-inline-block float-right" placeholder="{{str_replace(['a','i','u','e','o','ng'], '', explode('-', $product->detail)[$i])}}">
+                <input type="number" name="detail[{{$i}}]" class="form-control col-md-1 col-2 d-inline-block float-right" placeholder="{{str_replace(['a','i','u','e','o','ng'], '', explode('-', $product->detail)[$i])}}">
                 @endfor
             </form>
         </li>
@@ -88,7 +88,7 @@
             var text = data.detail.split('-');
             for(var i = text.length -1; i >= 0; i--){
                 var a = text[i].replace(/a|i|u|e|o|ng/gi, '');
-                append += '<input type="number" name="detail['+i+']" class="form-control col-md-2 col-2 d-inline-block float-right" placeholder="'+a+'">';
+                append += '<input type="number" name="detail['+i+']" class="form-control col-md-1 col-2 d-inline-block float-right" placeholder="'+a+'">';
             }
             append += '</form></li>';
             return append;
