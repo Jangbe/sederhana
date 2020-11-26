@@ -98,7 +98,7 @@ class AdminsController extends Controller
             'harga'  => 'required',
             'gambar' => 'required|image|mimes:jpg,png,jpeg'
         ]);
-        $id = $this->kodeUnik('kode_barang', 'KD');
+        $id = $this->kodeUnik('id', 'KD');
         $file = $data->file('gambar');
         $eks = $file->getClientOriginalExtension();
         $fileName = date('dmy-').uniqid().'.'.$eks;
@@ -106,7 +106,7 @@ class AdminsController extends Controller
         $detail = $data->detail;
         $detail[] = 1;
         Product::create([
-            'kode_barang' => $id,
+            'id' => $id,
             'nama' => $data->nama,
             'singkatan' => $data->singkatan,
             'stok' => 0,
@@ -214,7 +214,8 @@ class AdminsController extends Controller
         }else{
             $akhirkode = 1;
         }
-
+        dd($akhirkode);
+        
         if ($akhirkode <= 9){
             $kodebaru = $simbol."000".$akhirkode;
         }else if($akhirkode <= 99){
