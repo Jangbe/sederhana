@@ -102,7 +102,7 @@ class AdminsController extends Controller
         $file = $data->file('gambar');
         $eks = $file->getClientOriginalExtension();
         $fileName = date('dmy-').uniqid().'.'.$eks;
-        $path = 'https://postimg.cc/gallery/63NrdJg';
+        $path = 'img/barang';
         $detail = $data->detail;
         $detail[] = 1;
         Product::create([
