@@ -6,7 +6,7 @@
 @section('content')
 <div class="row">
     <div class="col-md-4 mb-3">
-            <img src="{{ url('img/barang').'/'.$data->gambar }}" class="img-thumbnail d-block w-100" style="width: 100%; height: 370px;">
+            <img src="{{ 'https://pkl1.4visionmedia.net/img/barang/'.$data->gambar }}" class="img-thumbnail d-block w-100" style="width: 100%; height: 370px;">
         </div>
         <div class="col-md-8">
             <form action="{{ url('produk/tmbh-stok') }}" method="post" enctype="multipart/form-data">

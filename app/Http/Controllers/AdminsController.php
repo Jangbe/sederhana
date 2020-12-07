@@ -102,7 +102,8 @@ class AdminsController extends Controller
         $file = $data->file('gambar');
         $eks = $file->getClientOriginalExtension();
         $fileName = date('dmy-').uniqid().'.'.$eks;
-        $path = 'img/barang';
+        $path = 'https://pkl1.4visionmedia.net/img/barang/';
+        // $path = 'img/barang';
         $detail = $data->detail;
         $detail[] = 1;
         Product::create([
@@ -110,7 +111,7 @@ class AdminsController extends Controller
             'nama' => $data->nama,
             'singkatan' => $data->singkatan,
             'stok' => 0,
-            'berat' => $data->berat,
+            'berat' => $data->berat/1000,
             'harga' => $data->harga,
             'gambar' => $fileName,
             'kategori' => $data->kategori,
@@ -214,7 +215,7 @@ class AdminsController extends Controller
         }else{
             $akhirkode = 1;
         }
-        
+
         if ($akhirkode <= 9){
             $kodebaru = $simbol."000".$akhirkode;
         }else if($akhirkode <= 99){

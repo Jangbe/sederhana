@@ -27,7 +27,7 @@
         <tbody>
             @foreach($data as $dta)
             <tr>
-                <td><img src="{{ url("img/barang/".$dta->gambar) }}" class="img-thumbnail" style="width:60px;height:60px;"></td>
+                <td><img src="{{ 'https://pkl1.4visionmedia.net/img/barang/'.$dta->gambar) }}" class="img-thumbnail" style="width:60px;height:60px;"></td>
                 <td>{{ $dta->nama }}</td>
                 <td class="text-right">
                     <a href="{{ url("produk/tmbh-stok/".$dta->kode_barang) }}" class="btn btn-success"><i class="fas fa-plus-circle"></i><span class="d-none d-md-inline"> Tambah</span></a>
