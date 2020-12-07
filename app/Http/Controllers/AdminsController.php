@@ -110,7 +110,7 @@ class AdminsController extends Controller
             'nama' => $data->nama,
             'singkatan' => $data->singkatan,
             'stok' => 0,
-            'berat' => $data->berat,
+            'berat' => $data->berat/1000,
             'harga' => $data->harga,
             'gambar' => $fileName,
             'kategori' => $data->kategori,
@@ -214,7 +214,7 @@ class AdminsController extends Controller
         }else{
             $akhirkode = 1;
         }
-        
+
         if ($akhirkode <= 9){
             $kodebaru = $simbol."000".$akhirkode;
         }else if($akhirkode <= 99){

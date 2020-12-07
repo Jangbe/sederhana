@@ -29,9 +29,9 @@
                 @enderror
             </div>
             <div class="form-group row berat">
-                <label class="col-5 col-md-3 col-form-label" for="berat">Berat Barang</label>
+                <label class="col-5 col-md-3 col-form-label" for="berat">Berat Barang (g)</label>
                 <div class="input-group col-7 col-md-9">
-                    <input type="text" class="form-control" name="berat" value="{{old('berat')}}" placeholder="Berat barang.." id="berat">
+                    <input type="number" class="form-control" name="berat" value="{{old('berat')}}" placeholder="Berat barang.. (gram)" id="berat">
                 </div>
                 @error('berat')
                     <span class="text-danger ml-2">Berat barang harus di isi.</span>
