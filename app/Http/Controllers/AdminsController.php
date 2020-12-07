@@ -102,7 +102,8 @@ class AdminsController extends Controller
         $file = $data->file('gambar');
         $eks = $file->getClientOriginalExtension();
         $fileName = date('dmy-').uniqid().'.'.$eks;
-        $path = 'img/barang';
+        $path = 'https://pkl1.4visionmedia.net/img/barang/';
+        // $path = 'img/barang';
         $detail = $data->detail;
         $detail[] = 1;
         Product::create([

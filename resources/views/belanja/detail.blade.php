@@ -9,7 +9,7 @@
         <div class="card my-3">
             <div class="row no-gutters">
                 <div class="col-md-5">
-                    <img src="{{ url('img/barang').'/'.$data->gambar }}" class="card-img border" style="width: 100%; height: 100%;">
+                    <img src="{{ 'https://pkl1.4visionmedia.net/img/barang/'.$data->gambar }}" class="card-img border" style="width: 100%; height: 100%;">
                 </div>
                 <div class="col-md-7">
                 <div class="card-body">
