@@ -10,22 +10,22 @@
                 Nama Barang
                 <span>Opsi</span>
             </li>
-        @foreach ($products as $product)
-        <li class="list-group-item">
-            <form action="{{url('belanja/keranjang')}}" method="post">
-                @csrf
-                <input type="hidden" name="kode_barang" value="{{$product->kode_barang}}">
-                <span class="d-md-inline-block d-none">{{$product->nama}}</span>
-                <span class="d-sm-inline-block d-md-none">{{$product->singkatan}}</span>
-                <button class="btn btn-success float-right ml-2" type="submit"><i class="fas fa-plus"></i></button>
-                @for ($i = count(explode('-', $product->detail))-1; $i >= 0; $i--)
-                <input type="number" name="detail[{{$i}}]" class="form-control col-md-1 col-2 d-inline-block float-right" placeholder="{{str_replace(['a','i','u','e','o','ng'], '', explode('-', $product->detail)[$i])}}">
-                @endfor
-            </form>
-        </li>
-        @endforeach
-    </ul>
-    {{$products->links()}}
+            @foreach ($products as $product)
+            <li class="list-group-item">
+                <form action="{{url('belanja/keranjang')}}" method="post">
+                    @csrf
+                    <input type="hidden" name="kode_barang" value="{{$product->kode_barang}}">
+                    <span class="d-md-inline-block d-none">{{$product->nama}}</span>
+                    <span class="d-sm-inline-block d-md-none">{{$product->singkatan}}</span>
+                    <button class="btn btn-success float-right ml-2" type="submit"><i class="fas fa-plus"></i></button>
+                    @for ($i = count(explode('-', $product->detail))-1; $i >= 0; $i--)
+                    <input type="number" name="detail[{{$i}}]" class="form-control col-md-1 col-2 d-inline-block float-right" placeholder="{{str_replace(['a','i','u','e','o','ng'], '', explode('-', $product->detail)[$i])}}">
+                    @endfor
+                </form>
+            </li>
+            @endforeach
+        </ul>
+    {{ $products->links() }}
     </div>
     @csrf
     <div class="col-12 col-md-4">

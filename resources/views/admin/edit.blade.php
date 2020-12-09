@@ -30,7 +30,7 @@
             @foreach($data as $dta)
             <tr>
                 <th scope="row" class="text-center">{{ $loop->iteration }}</th>
-                <td><img src="{{ 'https://pkl1.4visionmedia.net/img/barang/'.$dta->gambar }}" class="img-thumbnail" style="width:60px;height:60px;"></td>
+                <td><img src="{{ Ghelper::glinkFoto($dta->gambar) }}" class="img-thumbnail" style="width:60px;height:60px;"></td>
                 <td>{{ $dta->nama }}</td>
                 <td class="text-right">
                     <a href="{{ url('produk/edit').'/'.$dta->kode_barang }}" class="btn btn-success"><i class="fas fa-edit"></i><span class="d-none d-md-inline"> Edit</span></a>
