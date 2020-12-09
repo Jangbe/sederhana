@@ -198,7 +198,7 @@ class AdminsController extends Controller
     public function destroy($id)
     {
         $data = Product::where('kode_barang', $id)->firstOrFail();
-        Storage::disk('google')->delete('id_folder/id_file');
+        Storage::disk('google')->delete(Ghelper::getPathId($data->gambar));
         Product::where('kode_barang', $id)->delete();
         return redirect('/produk/edit')->with('pesan', [
             'pesan' => 'Barang berhasil di hapus',
