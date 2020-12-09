@@ -13,7 +13,7 @@ class GoogleHelpersServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        return require_once app_path(). '\Helpers\GoogleHelpers.php';
+        return require_once app_path(). '/Helpers/GoogleHelpers.php';
     }
 
     /**
