@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Contracts\Support\Jsonable;
 use App\Http\Controllers\Controller;
 use App\Product;
 use App\Buyer;
@@ -12,7 +11,7 @@ use App\Cart;
 use App\Kategori;
 use App\Transaksi;
 use Illuminate\Support\Facades\Storage;
-use League\CommonMark\Inline\Element\Strong;
+use App\Helpers\GoogleHelpers as Ghelper;
 
 class AdminsController extends Controller
 {
@@ -106,8 +105,8 @@ class AdminsController extends Controller
         $content = $file->getContent();
         $fileName = date('dmy-').uniqid().'.'.$eks;
 
-        $gambar = Storage::disk('google')->put($fileName, $content);
-        // dd($gambar);
+        Storage::disk('google')->put($fileName, $content);
+
         $detail = $data->detail;
         $detail[] = 1;
         Product::create([
@@ -176,9 +175,8 @@ class AdminsController extends Controller
             $eks = $gambar->getClientOriginalExtension();
             $fileName = date('dmy-').uniqid().'.'.$eks;
             $content = $gambar->getContent();
-            $gambar->move('img/barang', $fileName);
             Storage::disk('google')->put($fileName, $content);
-            Storage::disk('google')->delete($namaLama);
+            Storage::disk('google')->delete(Ghelper::getPathId($namaLama));
         }else{
             $fileName = $namaLama;
         }
@@ -198,7 +196,8 @@ class AdminsController extends Controller
     public function destroy($id)
     {
         $data = Product::where('kode_barang', $id)->firstOrFail();
-        Storage::disk('google')->delete(Ghelper::getPathId($data->gambar));
+        $path = Ghelper::getPathId($data->gambar);
+        Storage::disk('google')->delete($path);
         Product::where('kode_barang', $id)->delete();
         return redirect('/produk/edit')->with('pesan', [
             'pesan' => 'Barang berhasil di hapus',
