@@ -11,6 +11,8 @@ use App\Buyer;
 use App\Cart;
 use App\Kategori;
 use App\Transaksi;
+use Illuminate\Support\Facades\Storage;
+use League\CommonMark\Inline\Element\Strong;
 
 class AdminsController extends Controller
 {
@@ -101,9 +103,11 @@ class AdminsController extends Controller
         $id = $this->kodeUnik('kode_barang', 'KD');
         $file = $data->file('gambar');
         $eks = $file->getClientOriginalExtension();
+        $content = $file->getContent();
         $fileName = date('dmy-').uniqid().'.'.$eks;
-        $path = 'https://pkl1.4visionmedia.net/img/barang/';
-        // $path = 'img/barang';
+
+        $gambar = Storage::disk('google')->put($fileName, $content);
+        // dd($gambar);
         $detail = $data->detail;
         $detail[] = 1;
         Product::create([
@@ -117,7 +121,7 @@ class AdminsController extends Controller
             'kategori' => $data->kategori,
             'detail' => implode('-', $detail)
         ]);
-        $file->move($path, $fileName);
+
         return redirect('produk/add')->with('pesan', [
             'pesan' => 'Barang berhasil di tambahkan',
             'type' => 'success'
@@ -126,8 +130,8 @@ class AdminsController extends Controller
 
     public function edit()
     {
-        $data = Product::all();
-        return view('admin.edit', compact('data'));
+        $data['data'] = Product::all();
+        return view('admin.edit', $data);
     }
 
     public function edit1($id)
@@ -171,8 +175,10 @@ class AdminsController extends Controller
         if($gambar){
             $eks = $gambar->getClientOriginalExtension();
             $fileName = date('dmy-').uniqid().'.'.$eks;
+            $content = $gambar->getContent();
             $gambar->move('img/barang', $fileName);
-            unlink('img/barang/'.$namaLama);
+            Storage::disk('google')->put($fileName, $content);
+            Storage::disk('google')->delete($namaLama);
         }else{
             $fileName = $namaLama;
         }
@@ -191,6 +197,8 @@ class AdminsController extends Controller
 
     public function destroy($id)
     {
+        $data = Product::where('kode_barang', $id)->firstOrFail();
+        Storage::disk('google')->delete('id_folder/id_file');
         Product::where('kode_barang', $id)->delete();
         return redirect('/produk/edit')->with('pesan', [
             'pesan' => 'Barang berhasil di hapus',
